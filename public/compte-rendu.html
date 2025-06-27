@@ -1,55 +1,133 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compte Rendu - Test Technique</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
     <div class="container">
-        <a href="/" class="back-link">< Retour à l'accueil</a>
-        <h1>Compte Rendu</h1>
-        
-        <p>Ce document détaille l'approche et les choix techniques adoptés pour la réalisation du projet.</p>
+        <a href="/" class="back-link">
+            < Retour à l'accueil</a>
+                <h1>Compte Rendu du Test Technique</h1>
 
-        <h2>1. Architecture et Structure du Projet</h2>
-        <p>L'application a été développée en <strong>Node.js</strong> avec le framework <strong>Express.js</strong> et <strong>TypeScript</strong> pour garantir un typage fort et une meilleure maintenabilité. La structure du projet est modulaire, séparant les préoccupations (routes, contrôleurs, services, middlewares).</p>
-        <p>L'arborescence des fichiers est organisée comme suit :</p>
-        <img src="/images/structure.png" alt="Structure du projet">
+                <p>Ce document détaille l'approche et les choix techniques adoptés pour la réalisation du projet, de
+                    l'implémentation au déploiement.</p>
 
-        <h2>2. Implémentation de l'API</h2>
-        <h3>2.1. Communication avec l'API GDS Waynium</h3>
-        <p>Un service dédié (<code>GdsService.ts</code>) a été créé pour encapsuler toute la logique de communication avec l'API externe. Il gère la création du token JWT non-standard requis (avec des champs personnalisés dans l'en-tête) et les appels HTTP via <code>axios</code> vers les différents endpoints de l'API GDS (<code>/get-ressource</code>, <code>/set-ressource-v2</code>).</p>
-        
-        <h3>2.2. Endpoints de l'API Locale</h3>
-        <ul>
-            <li><strong><code>GET /api/missions</code></strong> : Récupère les missions.</li>
-            <li><strong><code>POST /api/mission</code></strong> : Crée une mission.</li>
-            <li><strong><code>POST /api/system/set-callback</code></strong> : Configure l'URL de callback dans le GDS.</li>
-        </ul>
 
-        <h2>3. Sécurité et Authentification</h2>
-        <p>L'API est sécurisée par un middleware d'authentification JWT. Pour faciliter les tests, un endpoint public <strong><code>GET /api/generate-test-token</code></strong> a été créé. Il fournit un token valide pour accéder aux routes protégées.</p>
-        <p>Exemple de requête authentifiée avec Postman :</p>
-        <img src="/images/postman.png" alt="Exemple de requête authentifiée">
+                <h2>1. API Déployée</h2>
+                <p>
+                    L'application est déployée en continu sur <strong> Azure App Service</strong> et est accessible à
+                    l'adresse suivante :
+                    <br>
+                    <strong><a href="https://chabe-test-api-bceugvbpabesd7fq.canadacentral-01.azurewebsites.net/"
+                            target="_blank">https://chabe-test-api-bceugvbpabesd7fq.canadacentral-01.azurewebsites.net/</a></strong>
+                </p>
+                <p>Voici une capture d'écran de la vue d'ensemble de l'App Service sur Azure :</p>
+                <img src="/images/azure-portal-overview.png" alt="Vue d'ensemble de l'App Service sur Azure">
 
-        <h2>4. Tests Unitaires</h2>
-        <p>Les tests ont été écrits avec <strong>Jest</strong> et <strong>Supertest</strong>. Le service <code>GdsService</code> est "mocké" pour isoler les tests de l'API externe, garantissant ainsi des tests rapides et fiables qui se concentrent sur la logique de notre propre application.</p>
-        <p>Résultat des tests exécutés avec succès :</p>
-        <img src="/images/tests.png" alt="Résultat des tests unitaires">
+                <p>Voici une capture sur l'API Deployé</p>
 
-        <h2>5. CI/CD et Déploiement sur Azure</h2>
-        <p>Un workflow <strong>GitHub Actions</strong> a été mis en place pour automatiser le processus de CI/CD. À chaque <code>push</code> sur la branche <code>main</code>, le workflow :</p>
-        <ol>
-            <li>Installe les dépendances.</li>
-            <li>Exécute les tests unitaires.</li>
-            <li>Construit l'application (compilation TypeScript).</li>
-            <li>Déploie l'application sur une <strong>Azure App Service</strong>.</li>
-        </ol>
-        <p>Les secrets sont gérés de manière sécurisée dans les secrets de GitHub et les variables d'environnement d'Azure.</p>
-        <p>Le workflow s'exécutant avec succès sur GitHub :</p>
-        <img src="/images/github-actions.png" alt="Workflow CI/CD réussi">
+                <img src="/images/index.png" alt="Vue d'ensemble de l'App Service sur Azure">
+
+                <p>
+                    Vous pouvez accéder à la documentation interactive de l'API via Swagger à l'adresse :
+                    <strong><a
+                            href="https://chabe-test-api-bceugvbpabesd7fq.canadacentral-01.azurewebsites.net/api-docs"
+                            target="_blank">https://chabe-test-api-bceugvbpabesd7fq.canadacentral-01.azurewebsites.net/api-docs</a></strong>
+
+                </p>
+                <hr>
+
+                <h2>2. Architecture et Structure du Projet</h2>
+                <p>L'application a été développée en <strong>Node.js</strong> avec le framework
+                    <strong>Express.js</strong> et <strong>TypeScript</strong> pour garantir un typage fort et une
+                    meilleure maintenabilité. La structure du projet est modulaire, séparant les préoccupations (routes,
+                    contrôleurs, services, middlewares).
+                </p>
+                <p>L'arborescence des fichiers est organisée comme suit :</p>
+                <img src="/images/structure.png" alt="Structure du projet">
+
+                <h2>3. Implémentation de l'API</h2>
+                <h3>3.1. Communication avec l'API GDS Waynium</h3>
+                <p>Un service dédié (<code>GdsService.ts</code>) a été créé pour encapsuler toute la logique de
+                    communication avec l'API externe. Il gère la création du token JWT non-standard requis et les appels
+                    HTTP via <code>axios</code> vers les différents endpoints de l'API GDS.</p>
+
+                <h3>3.2. Endpoints de l'API Locale</h3>
+                <ul>
+                    <li><strong><code>GET /api/missions</code></strong> : Récupère les missions.</li>
+                    <li><strong><code>POST /api/mission</code></strong> : Crée une mission.</li>
+                    <li><strong><code>POST /api/system/set-callback</code></strong> : Configure l'URL de callback dans
+                        le GDS.
+                    </li>
+                </ul>
+                <img src="/images/swagger-endpoints.png" alt="Exemple de requête authentifiée">
+
+                <h2>4. Sécurité et Authentification</h2>
+                <p>L'API est sécurisée par un middleware d'authentification JWT. Pour faciliter les tests, un endpoint
+                    public
+                    <strong><code>GET /api/generate-test-token</code></strong> a été créé. Il fournit un token valide
+                    pour
+                    accéder aux routes protégées.
+                </p>
+                <p>Exemple de requête authentifiée avec Swagger :</p>
+                <img src="/images/swagger.png" alt="Exemple de requête authentifiée">
+
+                <h2>5. Tests Unitaires</h2>
+                <p>Les tests ont été écrits avec <strong>Jest</strong> et <strong>Supertest</strong>. Le service
+                    <code>GdsService</code> est "mocké" pour isoler les tests de l'API externe, garantissant ainsi des
+                    tests
+                    rapides et fiables.
+                </p>
+                <p>Résultat des tests exécutés avec succès :</p>
+                <img src="/images/tests.png" alt="Résultat des tests unitaires">
+
+                <h2>6. CI/CD et Déploiement sur Azure</h2>
+                <p>Un workflow <strong>GitHub Actions</strong> a été mis en place pour automatiser le processus de
+                    CI/CD. À
+                    chaque <code>push</code> sur la branche <code>main</code>, le workflow teste, construit et déploie
+                    l'application sur une <strong>Azure App Service</strong>.</p>
+                <p>Le workflow s'exécutant avec succès sur GitHub :</p>
+                <a href="https://github.com/ShaymaF/chabe-test/actions" target="_blank">Voir les workflows sur GitHub
+                    Actions</a>
+                <img src="/images/github-actions.png" alt="Workflow CI/CD réussi">
+                <p>Le pipeline de déploiement est configuré pour s'exécuter automatiquement à chaque push sur la branche
+                    <code>main</code>, garantissant ainsi que la dernière version de l'application est toujours en
+                    production.
+                </p>
+                <img src="/images/pipline.png" alt="Pipline de déploiement">
+
+
+                <h3>6.1. Configuration en Production</h3>
+                <p>
+                    Les variables d'environnement cruciales (clés d'API, secrets) ne sont pas stockées dans le code.
+                    Elles sont
+                    configurées de manière sécurisée directement dans les **Paramètres de l'application** de l'Azure App
+                    Service, comme le montre la capture d'écran ci-dessous.
+                </p>
+                <img src="/images/azure-env-variables.png" alt="Configuration des variables d'environnement sur Azure">
+                <p>Cette approche garantit que les informations sensibles ne sont pas exposées dans le code source et
+                    sont
+                    gérées de manière sécurisée par Azure.</p>
+                <h2>7. Conclusion</h2>
+                <p>Ce projet démontre une approche moderne et sécurisée pour le développement d'API RESTful avec Node.js
+                    et TypeScript. L'utilisation de GitHub Actions pour CI/CD et le déploiement sur <strong>Azure App
+                        Service</strong> garantit une livraison continue et une gestion efficace des versions.</p>
+                <p>Pour toute question ou clarification, n'hésitez pas à me contacter.</p>
+                <h2>8. Contact</h2>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li><strong>Nom :</strong>Chaima Fradi</li>
+                    <li><strong>Email :</strong> <a href="mailto:shaima.frady@gmail.com">shaima.frady@gmail.com</a></li>
+                    <li><strong>Profil LinkedIn :</strong> <a href="https://www.linkedin.com/in/chaima-fradi-18b984101/"
+                            target="_blank">linkedin.com/in/chaima-fradi-18b984101/</a></li>
+                    <li><strong>Profil GitHub :</strong> <a href="https://github.com/ShaymaF"
+                            target="_blank">https://github.com/ShaymaF</a></li>
+                </ul>
     </div>
 </body>
+
 </html>
