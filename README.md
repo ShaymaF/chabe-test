@@ -4,35 +4,37 @@ Cette API REST, développée avec Node.js, Express.js et TypeScript, sert d'inte
 
 ## Fonctionnalités
 
--   **Intégration GDS Waynium** : Communication réelle avec l'endpoint `https://api.waynium.com/gdsv3`.
--   **Gestion des Missions** :
-    -   Création de missions via `/set-ressource-v2`.
-    -   Récupération et filtrage de missions par date via `/get-ressource`.
--   **Système de Callback** : Configuration du GDS pour recevoir des notifications de changement d'état (webhooks).
--   **Authentification JWT** : Sécurisation des endpoints de l'API avec JSON Web Tokens.
--   **Génération de Token** : Un endpoint de développement pour générer facilement des tokens de test.
--   **Validation des Données** : Utilisation de `Joi` pour valider les requêtes entrantes.
--   **Gestion des Erreurs et Logging** : Mécanismes robustes pour logger les requêtes et centraliser la gestion des erreurs.
--   **Documentation API** : Documentation interactive disponible via Swagger UI disponible à http://localhost:3000/api-docs.
--   **CI/CD** : Déploiement automatisé sur Azure App Service via GitHub Actions.
+- **Intégration GDS Waynium** : Communication réelle avec l'endpoint `https://api.waynium.com/gdsv3`.
+- **Gestion des Missions** :
+  - Création de missions via `/set-ressource-v2`.
+  - Récupération et filtrage de missions par date via `/get-ressource`.
+- **Système de Callback** : Configuration du GDS pour recevoir des notifications de changement d'état (webhooks).
+- **Authentification JWT** : Sécurisation des endpoints de l'API avec JSON Web Tokens.
+- **Génération de Token** : Un endpoint de développement pour générer facilement des tokens de test.
+- **Validation des Données** : Utilisation de `Joi` pour valider les requêtes entrantes.
+- **Gestion des Erreurs et Logging** : Mécanismes robustes pour logger les requêtes et centraliser la gestion des erreurs.
+- **Documentation API** : Documentation interactive disponible via Swagger UI disponible à http://localhost:3000/api-docs.
+- **CI/CD** : Déploiement automatisé sur Azure App Service via GitHub Actions.
 
 ## Prérequis
 
--   Node.js (v18.x ou supérieur recommandé)
--   npm 
--   Git
+- Node.js (v18.x ou supérieur recommandé)
+- npm
+- Git
 
 ## 1. Installation
 
 Suivez ces étapes pour mettre en place le projet localement.
 
 **1.1. Clonez le dépôt :**
+
 ```bash
 git clone <votre-repo-url>
 cd chabe-test-express
 ```
 
 **1.2. Installez les dépendances :**
+
 ```bash
 npm install
 ```
@@ -42,6 +44,7 @@ npm install
 Le projet utilise un fichier .env pour gérer les configurations sensibles.
 
 Copiez le fichier d'exemple :
+
 ```bash
 cp .env.example .env
 ```
@@ -64,21 +67,25 @@ GDS_SECRET_KEY=un-autre-secret-tres-solide-que-vous-partagez-avec-gds
 **Lancer l'application**
 
 Mode développement (avec redémarrage automatique via nodemon) :
+
 ```bash
 npm run dev
 ```
 
 Build pour la production :
+
 ```bash
 npm run build
 ```
 
 Lancer en production (après un `npm run build`) :
+
 ```bash
 npm start
 ```
 
 Lancer les tests unitaires :
+
 ```bash
 npm test
 ```
@@ -97,6 +104,7 @@ La plupart des endpoints sont protégés par JWT. Pour en obtenir un :
 **GET /api/generate-test-token**
 
 Exemple de réponse :
+
 ```json
 {
   "message": "Use this token to access protected endpoints.",
@@ -105,6 +113,7 @@ Exemple de réponse :
 ```
 
 Utiliser le token dans le header :
+
 ```
 Authorization: Bearer <votre_token>
 ```
@@ -114,10 +123,12 @@ Authorization: Bearer <votre_token>
 **GET /api/missions**
 
 Paramètres de Query (optionnels) :
+
 - `MIS_DATE_DEBUT#MIN` (YYYY-MM-DD)
 - `MIS_DATE_DEBUT#MAX` (YYYY-MM-DD)
 
 Exemple :
+
 ```bash
 curl -X GET "http://localhost:3000/api/missions?MIS_DATE_DEBUT%23MIN=2023-01-01" \
   -H "Authorization: Bearer <votre_token>"
@@ -126,32 +137,35 @@ curl -X GET "http://localhost:3000/api/missions?MIS_DATE_DEBUT%23MIN=2023-01-01"
 **POST /api/mission**
 
 Body JSON minimal :
+
 ```json
 {
-    "MIS_DATE_DEBUT": "2024-12-25",
-    "MIS_TSE_ID": "ID-TYPE-SERVICE-1",
-    "MIS_TVE_ID": "ID-TYPE-VEHICULE-2"
+  "MIS_DATE_DEBUT": "2024-12-25",
+  "MIS_TSE_ID": "ID-TYPE-SERVICE-1",
+  "MIS_TVE_ID": "ID-TYPE-VEHICULE-2"
 }
 ```
 
-### 3.3. Configuration Système 
+### 3.3. Configuration Système
 
 **POST /api/system/set-callback**
 
 Body :
+
 ```json
 {
-    "url": "https://my-domaine.com/webhook-handler"
+  "url": "https://my-domaine.com/webhook-handler"
 }
 ```
 
 ## 4. Déploiement CI/CD
 
-Défini dans `.github/workflows/deploy.yml`.
+Défini dans `.github/workflows/main_chabe-test-api.yml`.
 
 Déclencheur : push sur la branche `main`
 
 Étapes :
+
 - Installation des dépendances
 - Compilation TypeScript
 - Exécution des tests unitaires
@@ -160,4 +174,4 @@ Déclencheur : push sur la branche `main`
 ### Configuration requise sur GitHub :
 
 Créer un secret :  
-**AZURE_WEBAPP_PUBLISH_PROFILE**  
+**AZURE_WEBAPP_PUBLISH_PROFILE**
