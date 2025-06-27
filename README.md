@@ -29,8 +29,8 @@ Suivez ces étapes pour mettre en place le projet localement.
 **1.1. Clonez le dépôt :**
 
 ```bash
-git clone <votre-repo-url>
-cd chabe-test-express
+git clone https://github.com/ShaymaF/chabe-test.git
+cd chabe-test
 ```
 
 **1.2. Installez les dépendances :**
