@@ -1,0 +1,142 @@
+openapi: 3.0.0
+info:
+  title: Chabe Technical Test API
+  version: 1.0.0
+  description: API pour interagir avec le service GDS Waynium.
+
+servers:
+  - url: http://localhost:3000/api
+    description: Serveur de développement local
+
+tags:
+  - name: Authentication
+    description: Endpoints pour l'authentification et les tokens
+  - name: Missions
+    description: Opérations liées à la gestion des missions
+  - name: System
+    description: Opérations de configuration du callback du GDS
+
+paths:
+  /generate-test-token:
+    get:
+      tags:
+        - Authentication
+      summary: Générer un JWT pour les tests
+      description: Fournit un token JWT valide pendant 1 heure pour accéder aux endpoints protégés.
+      responses:
+        '200':
+          description: Un token JWT a été généré avec succès.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Utilisez ce token pour accéder aux endpoints protégés.
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+  /missions:
+    get:
+      tags:
+        - Missions
+      summary: Obtenir une liste de missions
+      description: Récupère les missions, avec un filtrage optionnel par date.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: MIS_DATE_DEBUT#MIN
+          in: query
+          schema:
+            type: string
+            format: date
+            example: '2024-01-01'
+        - name: MIS_DATE_DEBUT#MAX
+          in: query
+          schema:
+            type: string
+            format: date
+            example: '2024-01-31'
+      responses:
+        '200':
+          description: Une liste de missions.
+        '401':
+          description: Non autorisé.
+
+  /mission:
+    post:
+      tags:
+        - Missions
+      summary: Créer une nouvelle mission
+      description: Crée une nouvelle mission avec les détails de base.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMissionRequest'
+      responses:
+        '201':
+          description: Mission créée avec succès.
+        '400':
+          description: Mauvaise requête.
+        '401':
+          description: Non autorisé.
+
+  /system/set-callback:
+    post:
+      tags:
+        - System
+      summary: Configurer l'URL de callback du GDS
+      description: Configure une URL de webhook dans le GDS pour les notifications.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  example: https://my-domaine.com/webhook-handler
+                C_Gen_Mission:
+                  type: array
+                  items:
+                    type: string
+                  example: ["1451", "1452"]
+      responses:
+        '200':
+          description: Callback configuré avec succès.
+        '401':
+          description: Non autorisé.
+
+components:
+  schemas:
+    CreateMissionRequest:
+      type: object
+      properties:
+        MIS_DATE_DEBUT:
+          type: string
+          format: date
+          example: '2024-05-20'
+        MIS_TSE_ID:
+          type: string
+          example: 'SERVICE-01'
+        MIS_TVE_ID:
+          type: string
+          example: 'VEHICLE-05'
+      required:
+        - MIS_DATE_DEBUT
+        - MIS_TSE_ID
+        - MIS_TVE_ID
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
