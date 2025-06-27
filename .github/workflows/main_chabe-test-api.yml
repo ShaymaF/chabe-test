@@ -24,6 +24,11 @@ jobs:
           node-version: '20.x'
 
       - name: npm install, build, and test
+        env:
+            API_CLIENT_SECRET: a-secret-for-ci-tests
+            GDS_API_URL: https://api.waynium.com/gdsv3
+            GDS_API_KEY: ci-test-key
+            GDS_SECRET_KEY: ci-test-secret
         run: |
           npm install
           npm run build --if-present
