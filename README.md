@@ -171,7 +171,10 @@ Déclencheur : push sur la branche `main`
 - Exécution des tests unitaires
 - Déploiement Azure
 
-### Configuration requise sur GitHub :
+### Configuration requise sur GitHub et Déploiement sur Azure :
 
-Créer un secret :  
-**AZURE_WEBAPP_PUBLISH_PROFILE**
+1. Créer un **App Service** sur Azure.
+2. Accéder à votre App Service nouvellement créé dans le portail Azure et le connecter à votre dépôt GitHub ainsi qu'à la branche utilisée (main).
+   - Les secrets de connexion à Azure seront automatiquement ajoutés.
+   - Le fichier YAML `.github/workflows` sera également généré automatiquement.
+3. Configurer les **variables d'environnement** utilisées dans l'API directement sur Azure.
