@@ -10,6 +10,3 @@ dist/
 # Log files
 logs/
 *.log
-
-# Test coverage
-coverage/
