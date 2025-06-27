@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compte Rendu - Test Technique</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">< Retour à l'accueil</a>
+        <h1>Compte Rendu</h1>
+        
+        <p>Ce document détaille l'approche et les choix techniques adoptés pour la réalisation du projet.</p>
+
+        <h2>1. Architecture et Structure du Projet</h2>
+        <p>L'application a été développée en <strong>Node.js</strong> avec le framework <strong>Express.js</strong> et <strong>TypeScript</strong> pour garantir un typage fort et une meilleure maintenabilité. La structure du projet est modulaire, séparant les préoccupations (routes, contrôleurs, services, middlewares).</p>
+        <p>L'arborescence des fichiers est organisée comme suit :</p>
+        <img src="/images/structure.png" alt="Structure du projet">
+
+        <h2>2. Implémentation de l'API</h2>
+        <h3>2.1. Communication avec l'API GDS Waynium</h3>
+        <p>Un service dédié (<code>GdsService.ts</code>) a été créé pour encapsuler toute la logique de communication avec l'API externe. Il gère la création du token JWT non-standard requis (avec des champs personnalisés dans l'en-tête) et les appels HTTP via <code>axios</code> vers les différents endpoints de l'API GDS (<code>/get-ressource</code>, <code>/set-ressource-v2</code>).</p>
+        
+        <h3>2.2. Endpoints de l'API Locale</h3>
+        <ul>
+            <li><strong><code>GET /api/missions</code></strong> : Récupère les missions.</li>
+            <li><strong><code>POST /api/mission</code></strong> : Crée une mission.</li>
+            <li><strong><code>POST /api/system/set-callback</code></strong> : Configure l'URL de callback dans le GDS.</li>
+        </ul>
+
+        <h2>3. Sécurité et Authentification</h2>
+        <p>L'API est sécurisée par un middleware d'authentification JWT. Pour faciliter les tests, un endpoint public <strong><code>GET /api/generate-test-token</code></strong> a été créé. Il fournit un token valide pour accéder aux routes protégées.</p>
+        <p>Exemple de requête authentifiée avec Postman :</p>
+        <img src="/images/postman.png" alt="Exemple de requête authentifiée">
+
+        <h2>4. Tests Unitaires</h2>
+        <p>Les tests ont été écrits avec <strong>Jest</strong> et <strong>Supertest</strong>. Le service <code>GdsService</code> est "mocké" pour isoler les tests de l'API externe, garantissant ainsi des tests rapides et fiables qui se concentrent sur la logique de notre propre application.</p>
+        <p>Résultat des tests exécutés avec succès :</p>
+        <img src="/images/tests.png" alt="Résultat des tests unitaires">
+
+        <h2>5. CI/CD et Déploiement sur Azure</h2>
+        <p>Un workflow <strong>GitHub Actions</strong> a été mis en place pour automatiser le processus de CI/CD. À chaque <code>push</code> sur la branche <code>main</code>, le workflow :</p>
+        <ol>
+            <li>Installe les dépendances.</li>
+            <li>Exécute les tests unitaires.</li>
+            <li>Construit l'application (compilation TypeScript).</li>
+            <li>Déploie l'application sur une <strong>Azure App Service</strong>.</li>
+        </ol>
+        <p>Les secrets sont gérés de manière sécurisée dans les secrets de GitHub et les variables d'environnement d'Azure.</p>
+        <p>Le workflow s'exécutant avec succès sur GitHub :</p>
+        <img src="/images/github-actions.png" alt="Workflow CI/CD réussi">
+    </div>
+</body>
+</html>
