@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - chabe-test-api
+name: Test, Build and deploy Node.js app to Azure Web App - chabe-test-api
 
 on:
   push:
@@ -10,29 +10,58 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
     permissions:
       contents: read #This is required for actions/checkout
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
+          cache: 'npm'
 
-      - name: npm install, build, and test
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests
         env:
-            API_CLIENT_SECRET: a-secret-for-ci-tests
-            GDS_API_URL: https://api.waynium.com/gdsv3
-            GDS_API_KEY: ci-test-key
-            GDS_SECRET_KEY: ci-test-secret
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          API_CLIENT_SECRET: a-secret-for-ci-tests
+          GDS_API_URL: https://fake-gds-api.com/gdsv3
+          GDS_API_KEY: ci-test-key
+          GDS_SECRET_KEY: ci-test-secret
+        run: npm test --if-present
+
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the application
+        run: npm run build --if-present
+
+      - name: Prune development dependencies
+        run: npm prune --production
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -44,8 +73,12 @@ jobs:
           path: release.zip
 
   deploy:
+    name: Deploy to Azure
     runs-on: ubuntu-latest
     needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
       contents: read #This is required for actions/checkout
@@ -58,7 +91,7 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -73,4 +106,3 @@ jobs:
           app-name: 'chabe-test-api'
           slot-name: 'Production'
           package: .
-          
