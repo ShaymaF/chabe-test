@@ -4,9 +4,8 @@ info:
   version: 1.0.0
   description: API pour interagir avec le service GDS Waynium.
 
-
 servers:
-  - url: chabe-test-api-bceugvbpabesd7fq.canadacentral-01.azurewebsites.net/api 
+  - url: https://chabe-test-api-bceugvbpabesd7fq.canadacentral-01.azurewebsites.net/api
     description: Serveur de production (Azure)
   - url: http://localhost:3000/api
     description: Serveur de développement local
@@ -112,7 +111,7 @@ paths:
                   type: array
                   items:
                     type: string
-                  example: ["1451", "1452"]
+                  example: ['1451', '1452']
       responses:
         '200':
           description: Callback configuré avec succès.
